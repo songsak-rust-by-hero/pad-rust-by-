@@ -1,7 +1,8 @@
 use std::fmt;
+use crate::satang::satang_to_baht;
 
 #[derive(Debug)]
-enum BankError {
+pub enum BankError {
     InsufficientFunds { balance: i64, amount: i64 },
     AccountNotFound(String),
     AccountFrozen(String),

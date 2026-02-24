@@ -1,3 +1,5 @@
+use crate::error::BankError; 
+
 pub struct Account {
     account_id: String,
     balance: i64,
@@ -25,7 +27,7 @@ impl Account {
          self.is_frozen
     }
     pub fn account_id(&self) -> &str {
-         self.account_id
+        &self.account_id
     }
     pub fn remaining_daily_limit(&self) -> i64 {
          self.daily_limit - self.daily_withdrawn
@@ -33,4 +35,18 @@ impl Account {
     pub fn set_frozen(&mut self,status:bool){
          self.is_frozen = status;
     }
+    pub fn deposit(&mut self,amount: i64)-> Result <(),BankError>{
+      if self.is_frozen {
+         return Err(BankError::AccountFrozen(self.account_id.clone()));
+      }
+      if  amount <= 0 {
+          return Err(BankError::InvalidAmount(amount));
+      }
+          let new_balance = self.balance
+          .checked_add(amount)
+          .ok_or_else(|| BankError::TransactionFailed
+              ("ยอดเงินเกินขีดจำกัดที่ระบบรองรับ".to_string()))?;
+     self.balance = new_balance; 
+         Ok(())
+    }      
 }

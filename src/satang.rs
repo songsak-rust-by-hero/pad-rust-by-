@@ -1,4 +1,4 @@
-fn satang_to_baht(satang: i64) -> String {
+pub fn satang_to_baht(satang: i64) -> String {
     let sign = if satang < 0 { "-" } else { "" };
     let abs_satang = satang.unsigned_abs();
     
